@@ -9,74 +9,54 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
+const cors = require('cors');
 
 const app = express();
-
-app.use(bodyParser.json());
 
 const database = {
     users: [
         {
             id: '123',
             name: 'John',
+            password: 'cookies',
             email: 'john@gmail.com',
-            password: 'orange',
             entries: 0,
             joined: new Date()
         },
         {
             id: '124',
             name: 'Sally',
+            password: 'bananas',
             email: 'sally@gmail.com',
-            password: 'banana',
             entries: 0,
             joined: new Date()
         }
     ],
-    login: [
-        {
-            id: '987',
-            hash: '',
-            email: 'john@gmail.com'
-        }
-    ]
 };
+
+app.use(bodyParser.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send(database.users);
 });
 
 app.post('/signin', (req, res) => {
-    bcrypt.compare("apple", '$2a$10$Cq6ell8DpOi1/FYoz907JOguUYpgycE/OQV9UR.mojhSWREBq36Ym', function (err, res) {
-        console.log('first guess', res);
-    });
-
-    bcrypt.compare("haha", '$2a$10$Cq6ell8DpOi1/FYoz907JOguUYpgycE/OQV9UR.mojhSWREBq36Ym', function (err, res) {
-        console.log('second guess', res);
-    });
-
     if (req.body.email === database.users[0].email &&
         req.body.password === database.users[0].password) {
-        res.json("Success");
+        res.json(database.users[0]);
     } else {
         res.status(400).json("Error logging in");
     }
 });
 
 app.post('/register', (req, res) => {
-    const { email, name, password } = req.body;
-
-    bcrypt.genSalt(10, function (err, salt) {
-        bcrypt.hash(password, salt, function (err, hash) {
-            console.log(hash);
-        });
-    });
-
+    const { email, name } = req.body;
+    
     database.users.push({
         id: '125',
         name: name,
         email: email,
-        password: password,
         entries: 0,
         joined: new Date()
     });
