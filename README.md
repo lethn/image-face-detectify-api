@@ -1,1 +1,1 @@
-# image-face-detectify-api
+# ImageFaceDetectify API (Back-End Server)
