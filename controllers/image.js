@@ -35,11 +35,12 @@ const handleAPICall = (req, res) => {
         metadata,
         (err, response) => {
             if (err) {
-                throw new Error(err);
+                console.log("Error: " + err);
             }
 
             if (response.status.code !== 10000) {
-                throw new Error("Post model outputs failed, status: " + response.status.description);
+                console.log("Received failed status: " + response.status.description + "\n" + response.status.details);
+                return;
             }
 
             const regions = response.outputs[0].data.regions;
